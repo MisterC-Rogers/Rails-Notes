@@ -1,7 +1,15 @@
 <br />
-<h1>Editing Note</h1>
-<br />
-<%= render 'form', note: @note %>
-<br />
-<%= link_to 'Show', @note, class:'btn btn-success' %> 
-<%= link_to 'Back', notes_path, class:'btn btn-dark' %>
+<div class="card">
+  <h1 class="card-header" style='text-align:center;'>Editing Note</h1>
+  <div class="card-body" style='text-align:center;'>
+    <%= render 'form', note: @note %>
+    <br/>
+    <div style='display:flex;'>
+        <%= link_to 'Show', @note, class:'btn btn-success' %>
+        <p style='margin:auto 3px;'> </p>
+        <%= button_to 'Delete', @note, method: :delete, data: { confirm: 'Are you sure?' }, class:'btn btn-danger' %>
+        <p style='margin:auto 3px;'> </p>
+        <%= link_to 'Back', notes_path, class:'btn btn-dark' %>
+    </div>
+  </div>
+</div>

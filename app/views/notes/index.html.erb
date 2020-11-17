@@ -1,27 +1,44 @@
-<h1 style='text-align:center;'>My Notes</h1>
-<br />
-<table class='table table-hover table-bordered table-stripped'>
-  <thead class='thead-dark'>
-    <tr>
-      <th style='text-align:center;'>Title</th>
-      <th style='text-align:center;'>Actions</th>
-    </tr>
-  </thead>
+<% if user_signed_in? %>
+  <br/>
+    <h1 style='text-align:center;'>My Notes</h1>
+    <br />
+    <div class='container' style='display:flex; flex-wrap: wrap; justify-content:center;'>
+      <% @notes.each do |note| %>
+        <%# make it where a user can only see their own notes %>
+        <% if note.user == current_user %>
+            <div class="card" style="width: 18rem; margin: 10px;">
+              <div class="card-body">
+                <h5 class="card-title" style='text-align:center;'><%= link_to note.title, note %></h5>
+                <br/>
+                <div style='display:flex; justify-content:space-around;'>
+                  <%= button_to 'Edit', edit_note_path(note), class:'btn btn-outline-success btn-sm'  %>
+                  <%= button_to 'Delete', note, method: :delete, data: { confirm: 'Are you sure?' }, class:'btn btn-outline-danger btn-sm' %>
+                </div>
+              </div>
+            </div>
+          <% else %>
+          <%# if the user does not have notes %>
+            <h3>There does not appear to be saved notes for you</h3>
+            <p>Please add a note</p>
+        <% end %>
+      <% end %>
+    </div>
 
-  <tbody>
-    <% @notes.each do |note| %>
-      <tr>
-        <td style='text-align:center;'><%= note.title %></td>
-        <td style='display:flex; justify-content:space-evenly;'>
-          <%= link_to 'Show', note, class:'btn btn-link'  %>
-          <%= link_to 'Edit', edit_note_path(note), class:'btn btn-link'  %>
-          <%= button_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' }, class:'btn btn-link' %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Note', new_note_path, class:'btn btn-primary' %>
+    <br>
+    <div style='display:flex; justify-content:center;'>
+      <%= link_to 'New Note', new_note_path, class:'btn btn-primary' %>
+    </div>
+  <% else %>
+  <br/>
+  <div class="card">
+  <h2 class="card-header" style='text-align:center;'>My Notes</h2>
+  <div class="card-body">
+    <p class="card-text">This is an App where you are able to save your notes and be able to access them later</p>
+    <p class="card-text" style='text-align:center;'>Please signin/signup</p>
+    <div style='display:flex; justify-content:space-around;'>
+      <%= button_to 'Sign Up', new_user_registration_path, class: 'btn btn-success'%>
+      <%= button_to 'Sign In', new_user_session_path, class: 'btn btn-primary'%>
+    </div>
+  </div>
+</div>
+<% end %>

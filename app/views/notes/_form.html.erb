@@ -18,7 +18,12 @@
 
   <div class="field form-group">
     <% form.label :body %>
-    <%= form.text_field :body, class:'form-control', placeholder:'This is where you add the note' %>
+    <%= form.text_area :body, class:'form-control', placeholder:'This is where you add the note', rows: "10"  %>
+  </div>
+
+  <div class="field form-group">
+    <% form.label :body %>
+    <%= form.hidden_field :user_id, :id => :note_user_id, class:'form-control', value:current_user.id, min:current_user.id, max:current_user.id %>
   </div>
   <br />
   <div class="actions">

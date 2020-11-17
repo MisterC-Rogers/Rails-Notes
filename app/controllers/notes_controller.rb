@@ -1,5 +1,9 @@
 class NotesController < ApplicationController
   before_action :set_note, only: [:show, :edit, :update, :destroy]
+  # make sure user is signed in
+  before_action :authenticate_user!, except:[:index]
+  # make middleware to protect the notes from being hacked 
+  before_action :correct_user, only: [:edit, :update, :show, :destory]
 
   # GET /notes
   # GET /notes.json
@@ -14,7 +18,9 @@ class NotesController < ApplicationController
 
   # GET /notes/new
   def new
-    @note = Note.new
+    # @note = Note.new
+    # make the new note belong to a user
+    @note = current_user.notes.build
   end
 
   # GET /notes/1/edit
@@ -24,7 +30,9 @@ class NotesController < ApplicationController
   # POST /notes
   # POST /notes.json
   def create
-    @note = Note.new(note_params)
+    # @note = Note.new(note_params)
+    # make the new note belong to a user
+    @note = current_user.notes.build(note_params)
 
     respond_to do |format|
       if @note.save
@@ -61,6 +69,12 @@ class NotesController < ApplicationController
     end
   end
 
+  # Auth Middleware
+  def correct_user
+    @note = current_user.notes.find_by(:id => params[:id])
+    redirect_to notes_path, notice:"Not Authorized To edit this note" if @note.nil?
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_note
@@ -69,6 +83,6 @@ class NotesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def note_params
-      params.require(:note).permit(:title, :body)
+      params.require(:note).permit(:title, :body, :user_id)
     end
 end
